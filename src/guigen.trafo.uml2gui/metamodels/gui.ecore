@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="gui" nsURI="http://guigen/gui" nsPrefix="guigen">
+  <eClassifiers xsi:type="ecore:EClass" name="Widget" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Container" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="widgets" upperBound="-1"
+        eType="#//Widget" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="layout" eType="#//Layout"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Text" eSuperTypes="#//Widget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GUI">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="windows" upperBound="-1"
+        eType="#//Window" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="validators" upperBound="-1"
+        eType="#//Validator" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Window" eSuperTypes="#//Container">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Frame" eSuperTypes="#//Widget #//Container">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Label" eSuperTypes="#//Widget">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ComboBox" eSuperTypes="#//Widget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ListBox" eSuperTypes="#//Widget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DatePicker" eSuperTypes="#//Widget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Button" eSuperTypes="#//Widget">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Validator" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IntegerValidator" eSuperTypes="#//Validator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Layout" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GridLayout" eSuperTypes="#//Layout">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numColumns" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numRows" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="info" upperBound="-1" eType="#//GridInfo"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GridInfo">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="widget" lowerBound="1"
+        eType="#//Widget"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="column" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="row" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FlowLayout" eSuperTypes="#//Layout">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="direction" lowerBound="1"
+        eType="#//FlowDirection"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="FlowDirection">
+    <eLiterals name="vertical"/>
+    <eLiterals name="horizontal" value="1"/>
+  </eClassifiers>
+</ecore:EPackage>

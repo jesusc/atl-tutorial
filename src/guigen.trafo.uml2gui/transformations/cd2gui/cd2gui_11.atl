@@ -1,0 +1,128 @@
+-- @path CD=/guigen.trafo.uml2gui/metamodels/cd.ecore
+-- @path GUI=/guigen.trafo.uml2gui/metamodels/gui.ecore
+
+
+module "cd2gui_10 abstract rules and lazy rules";
+create OUT: GUI from IN: CD;
+
+helper context CD!Attribute def: isText(): Boolean =
+	self.type.name = 'String';
+
+helper context CD!Attribute def: isInt(): Boolean =
+	self.type.name = 'Integer';
+
+helper context CD!Attribute def: isDate(): Boolean =
+	self.type.name = 'Date';
+
+
+helper context CD!Class def: allFeatures : Sequence(CD!Feature) =
+	self.superclasses->collect(c | c.allFeatures)->flatten()->union(self.features);
+
+helper context CD!Class def: allAttributes : Sequence(CD!Attribute) =
+	self.allFeatures->select(a | a.oclIsKindOf(CD!Attribute));
+
+
+--- A model is mapped to a GUI, containing one window whose
+--- is vertical.
+rule model2gui {
+  from  m: CD!Model
+	to	w: GUI!Window (
+			title <- m.name,
+			layout <- vflow,
+			widgets <- m.classifiers->select(c | c.oclIsKindOf(CD!Class))
+		),
+		g: GUI!GUI (
+			windows <- w
+		),
+		vflow: GUI!FlowLayout (
+			direction <- #vertical
+		)
+}
+
+rule class2frame {
+	from c: CD!Class ( not c.isAbstract )
+	to	frm: GUI!Frame (
+			name <- 'frm' + c.name,
+			title <- c.name,
+			widgets <- c.allAttributes->collect(f | 
+				thisModule.attribute2widget(c, f)
+			),
+			
+			widgets <- c.allAttributes->collect(a | thisModule.attribute2label(c, a)),
+			layout <- grid
+		),
+		grid: GUI!GridLayout (
+			numColumns <- 2			
+		)
+}
+
+
+helper def : delayedGridInfo : Sequence(TupleType(src : CD!Class, tgt : GUI!GridInfo)) = Sequence { };
+
+
+lazy abstract rule attribute2widget {
+	from c : CD!Class, a: CD!Attribute 
+	to	t: GUI!Widget,
+	info : GUI!GridInfo (
+		column <- 1,
+		widget <- t
+	)
+}
+
+
+lazy rule attribute2text extends attribute2widget {
+	from  c : CD!Class, a: CD!Attribute  ( a.isText() )
+	to	t: GUI!Text (
+			name <- 'txt' + a.name
+	)
+	do {
+		thisModule.delayedGridInfo <- thisModule.delayedGridInfo->including(Tuple { src = c, tgt = info }); 		
+		-- thisModule.resolveTemp(c, 'grid').info <- info;
+	}
+}
+
+
+lazy rule attribute2int extends attribute2widget {
+	from  c : CD!Class, a: CD!Attribute  ( a.isInt() )
+	to	t: GUI!Text (
+		name <- 'int' + a.name
+	)
+	do {
+		thisModule.delayedGridInfo <- thisModule.delayedGridInfo->including(Tuple { src = c, tgt = info }); 		
+		-- thisModule.resolveTemp(c, 'grid').info <- info;
+	}
+}
+
+lazy rule attribute2date extends attribute2widget {
+	from  c : CD!Class, a: CD!Attribute  ( a.isDate() )
+	to	t: GUI!Text (
+		name <- 'date' + a.name
+	)
+	do {
+		thisModule.delayedGridInfo <- thisModule.delayedGridInfo->including(Tuple { src = c, tgt = info }); 		
+		-- thisModule.resolveTemp(c, 'grid').info <- info;
+	}
+}
+
+lazy rule attribute2label {
+   from c : CD!Class, a : CD!Attribute
+     to l : GUI!Label (
+		value <- a.name
+	), info : GUI!GridInfo (
+		column <- 2,
+		widget <- l
+	)
+    do {
+		thisModule.delayedGridInfo <- thisModule.delayedGridInfo->including(Tuple { src = c, tgt = info }); 		
+		-- thisModule.resolveTemp(c, 'grid').info <- info;
+	}
+}
+
+endpoint rule createGridLayouts() {
+  do {
+	for ( tuple in thisModule.delayedGridInfo ) {
+		thisModule.resolveTemp(tuple.src, 'grid').info <- tuple.tgt;
+	}
+  }
+}
+

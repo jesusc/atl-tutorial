@@ -1,0 +1,100 @@
+-- @path CD=/guigen.trafo.uml2gui/metamodels/cd.ecore
+-- @path GUI=/guigen.trafo.uml2gui/metamodels/gui.ecore
+
+module "cd2gui";
+create OUT: GUI from IN: CD;
+
+helper context CD!Attribute def : isText() : Boolean = 
+  self.type.name = 'String';
+
+helper context CD!Attribute def: isInt()  : Boolean = 
+  self.type.name = 'Integer';
+
+helper context CD!Attribute def: isDate()  : Boolean = 
+  self.type.name = 'Date';
+
+helper context CD!Class def: attributes()  : Sequence(CD!Attribute) = 
+	self.features->select(f | f.oclIsKindOf(CD!Attribute));
+
+helper context CD!Class def: references()  : Sequence(CD!Reference) = 
+	self.features->select(f | f.oclIsKindOf(CD!Reference));
+
+rule model2gui {
+  from m : CD!Model ( m.name <> 'PrimitiveTypes' )
+    to w : GUI!Window (
+	  title <- m.name,
+      layout <- hflow,
+	  widgets <- m.classifiers->
+	  	select(c | c.oclIsKindOf(CD!Class))->
+		select(c | not c.isAbstract )
+    ), g : GUI!GUI (
+	  windows <- w
+    ), hflow : GUI!FlowLayout (
+      direction <- #vertical	
+    )
+}
+
+
+
+rule class2frame {
+  from c : CD!Class ( not c.isAbstract )
+  to   f : GUI!Frame (
+     title <- c.name,
+     widgets <- c.attributes()->union(c.references()),
+	 widgets <- c.attributes()->collect(a | thisModule.resolveTemp(a, 'l')), 
+  	 layout <- grid
+	),
+	grid: GUI!GridLayout (
+		numColumns <- 2,
+		info <- c.attributes()->collect(a | thisModule.resolveTemp(a, 'g1')),
+		info <- c.attributes()->collect(a | thisModule.resolveTemp(a, 'g2')),
+		info <- c.references()->collect(a | thisModule.resolveTemp(a, 'g1'))
+	)
+}
+
+abstract rule attribute2widget {
+	from a: CD!Attribute 
+	  to w: GUI!Widget, 
+	     l : GUI!Label ( 
+	  	value <- a.name
+	  ), g1: GUI!GridInfo (
+			column <- 2,
+			widget <- w
+		),
+		g2: GUI!GridInfo (
+			column <- 1,
+			widget <- l
+		)
+}
+
+rule attribute2text extends attribute2widget {
+	from a: CD!Attribute (	a.isText()	)
+	to	w: GUI!Text (
+		name <- 'txt' + a.name	
+	)	
+}
+
+rule attribute2int extends attribute2widget {
+	from a: CD!Attribute (	a.isInt()	)
+	to	w: GUI!Text (
+		name <- 'int' + a.name	
+	)	
+}
+
+rule attribute2date extends attribute2widget {
+	from a: CD!Attribute (	a.isDate()	)
+	to	w: GUI!DatePicker (
+		name <- 'date' + a.name	
+	)	
+}
+ 
+rule reference2button {
+	from a: CD!Reference ( a.containment )
+	to	w: GUI!Button (
+		name <- 'btn' + a.name,
+		text <- 'Add ' + a.type.name
+	), g1: GUI!GridInfo (
+			column <- 1,
+			widget <- w
+		)	
+}

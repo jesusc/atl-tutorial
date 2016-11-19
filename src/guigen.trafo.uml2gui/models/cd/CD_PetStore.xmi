@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cd_guigen:Model
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:cd_guigen="http://guigen/cd">
+  <classifiers
+      xsi:type="cd_guigen:Class"
+      name="Person">
+    <features
+        xsi:type="cd_guigen:Attribute"
+        name="name"
+        type="//@classifiers.2"/>
+    <features
+        xsi:type="cd_guigen:Attribute"
+        name="address"
+        type="//@classifiers.2"/>
+    <features
+        xsi:type="cd_guigen:Reference"
+        name="pets"
+        type="//@classifiers.1"
+        upperBound="-1"/>
+  </classifiers>
+  <classifiers
+      xsi:type="cd_guigen:Class"
+      name="Pet">
+    <features
+        xsi:type="cd_guigen:Attribute"
+        name="name"
+        type="//@classifiers.2"/>
+    <features
+        xsi:type="cd_guigen:Attribute"
+        name="size"
+        type="//@classifiers.3"/>
+  </classifiers>
+  <classifiers
+      xsi:type="cd_guigen:DataType"
+      name="String"/>
+  <classifiers
+      xsi:type="cd_guigen:DataType"
+      name="Integer"/>
+</cd_guigen:Model>

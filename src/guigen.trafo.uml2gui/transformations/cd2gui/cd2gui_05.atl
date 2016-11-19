@@ -1,0 +1,89 @@
+-- @path CD=/guigen.trafo.uml2gui/metamodels/cd.ecore
+-- @path GUI=/guigen.trafo.uml2gui/metamodels/gui.ecore
+
+module "cd2gui_05_dynamic_layout";
+create OUT: GUI from IN: CD;
+
+helper def : isMobile : Boolean = true;
+
+
+helper context CD!Attribute def: isText(): Boolean =
+	self.type.name = 'String';
+
+helper context CD!Attribute def: isInt(): Boolean =
+	self.type.name = 'Integer';
+
+rule model2gui {
+  from  m: CD!Model
+	to	w: GUI!Window (
+			title <- m.name,
+			layout <- vflow,
+			widgets <- m.classifiers->select(c | c.oclIsKindOf(CD!Class))
+		),
+		g: GUI!GUI (
+			windows <- w
+		),
+		vflow: GUI!FlowLayout (
+			direction <- #vertical
+		)
+}
+
+rule class2frame {
+	from c: CD!Class ( not c.isAbstract )
+	to	f: GUI!Frame (
+			title <- c.name,
+			widgets <- c.features,
+			widgets <- c.features -> collect(a | thisModule.resolveTemp(a, 'l')),
+			layout <- if thisModule.isMobile then 
+							thisModule.createVFlow(c)
+					  else
+					  		thisModule.createGrid(c)
+					  endif
+		)
+}
+
+lazy rule createVFlow {
+   from c : CD!Class
+     to layout : GUI!FlowLayout (
+     	direction <- #vertical	
+     )
+}
+
+lazy rule createGrid {
+   from c : CD!Class
+     to grid: GUI!GridLayout (
+			numColumns <- 2,
+			info <- c.features->collect(a | thisModule.createGridInfo(thisModule.resolveTemp(a, 't'), 1))->
+				union(c.features->collect(a | thisModule.createGridInfo(thisModule.resolveTemp(a, 'l'), 2)))
+		)
+}
+
+rule attribute2text {
+	from a: CD!Attribute (	a.isText()	)
+	to	t: GUI!Text (
+			name <- 'txt' + a.name
+		),
+		l: GUI!Label (
+			value <- a.name	
+		)
+}
+
+rule attribute2int {
+	from a: CD!Attribute (	a.isInt()	)
+	to	t: GUI!Text (
+			name <- 'int' + a.name
+		),
+		l: GUI!Label (
+			value <- a.name	
+		)
+}
+
+rule createGridInfo(w : GUI!Widget, idx : Integer) {
+     to tgt : GUI!GridInfo (
+		column <- idx,
+		widget <- w     	
+     ) 
+	do {
+     	tgt;
+     }
+}

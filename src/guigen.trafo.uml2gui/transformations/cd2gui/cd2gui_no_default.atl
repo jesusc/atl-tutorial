@@ -1,0 +1,22 @@
+-- @path CD=/guigen.trafo.uml2gui/metamodels/cd.ecore
+-- @path GUI=/guigen.trafo.uml2gui/metamodels/gui.ecore
+
+module "resolve_no_default";
+create OUT: GUI from IN: CD;
+
+
+nodefault rule model2gui {
+	from m : CD!Model
+	to   w : GUI!Window (
+		widgets <- Sequence { m },		
+		title <- 'top-model'
+	)
+}
+
+rule model2gui_frame{
+	from m : CD!Model
+	to   w : GUI!Frame (
+		name <- 'no-top-model', 
+		title <- ''
+	)
+}

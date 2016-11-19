@@ -1,0 +1,81 @@
+-- @path CD=/guigen.trafo.uml2gui/metamodels/cd.ecore
+-- @path GUI=/guigen.trafo.uml2gui/metamodels/gui.ecore
+
+
+module "cd2gui_09_matched_rule_inheritance";
+create OUT: GUI from IN: CD;
+
+helper context CD!Attribute def: isText(): Boolean =
+	self.type.name = 'String';
+
+helper context CD!Attribute def: isInt(): Boolean =
+	self.type.name = 'Integer';
+
+--- A model is mapped to a GUI, containing one window whose
+--- is vertical.
+rule model2gui {
+  from  m: CD!Model
+	to	w: GUI!Window (
+			title <- m.name,
+			layout <- vflow,
+			widgets <- m.classifiers->select(c | c.oclIsKindOf(CD!Class))
+		),
+		g: GUI!GUI (
+			windows <- w
+		),
+		vflow: GUI!FlowLayout (
+			direction <- #vertical
+		)
+}
+
+abstract rule class2frame2 {
+	from c: CD!Class ( not c.isAbstract )
+	to	f: GUI!Frame (
+		widgets <- t
+	), t : GUI!Text ( name <- 'yyyyy')
+}
+
+rule class2frame extends class2frame2 {
+	from c: CD!Class ( not c.isAbstract )
+	to	f: GUI!Frame (
+			title <- c.name,
+			widgets <- c.features,
+			widgets <- c.features -> collect(a | thisModule.resolveTemp(a, 'l')),
+			layout <- grid
+		),
+		grid: GUI!GridLayout (
+			numColumns <- 2,
+			info <- c.features -> collect(a | thisModule.resolveTemp(a, 'g1')),
+			info <- c.features -> collect(a | thisModule.resolveTemp(a, 'g2'))
+		)
+}
+
+abstract rule attribute2widget {
+	from a: CD!Attribute 
+	  to w: GUI!Widget, 
+	     l : GUI!Label ( 
+	  	value <- a.name
+	  ), g1: GUI!GridInfo (
+			column <- 1,
+			widget <- w
+		),
+		g2: GUI!GridInfo (
+			column <- 2,
+			widget <- l
+		)
+}
+
+rule attribute2text extends attribute2widget {
+	from a: CD!Attribute (	a.isText()	)
+	to	w: GUI!Text (
+		name <- 'txt' + a.name	
+	)	
+}
+
+rule attribute2int extends attribute2widget {
+	from a: CD!Attribute (	a.isInt()	)
+	to	w: GUI!Text (
+		name <- 'int' + a.name	
+	)	
+}
+

@@ -1,0 +1,106 @@
+-- @path CD=/guigen.trafo.uml2gui/metamodels/cd.ecore
+-- @path GUI=/guigen.trafo.uml2gui/metamodels/gui.ecore
+
+--
+-- This increment (over cd2gui_04) considers all features.
+--
+module "cd2gui_06";
+create OUT: GUI from IN: CD;
+
+helper context CD!Attribute def: isText(): Boolean =
+	self.type.name = 'String';
+
+helper context CD!Attribute def: isInt(): Boolean =
+	self.type.name = 'Integer';
+
+helper context CD!Attribute def: isDate(): Boolean =
+	self.type.name = 'Date';
+
+
+helper context CD!Class def: allFeatures : Sequence(CD!Feature) =
+	self.superclasses->collect(c | c.allFeatures)->flatten()->union(self.features);
+
+rule model2gui {
+  from  m: CD!Model
+	to	w: GUI!Window (
+			title <- m.name,
+			layout <- hflow,
+			widgets <- m.classifiers->select(c | c.oclIsKindOf(CD!Class))
+		),
+		g: GUI!GUI (
+			windows <- w
+		),
+		hflow: GUI!FlowLayout (
+			direction <- #vertical
+		)
+}
+
+rule class2frame {
+	from c: CD!Class ( not c.isAbstract )
+	to	f: GUI!Frame (
+			name <- 'frm' + c.name,
+			title <- c.name,
+			widgets <- c.allFeatures,
+			widgets <- c.allFeatures -> collect(a | thisModule.resolveTemp(a, 'l')),
+			layout <- grid
+		),
+		grid: GUI!GridLayout (
+			numColumns <- 2,
+			info <- c.features -> collect(a | thisModule.resolveTemp(a, 'g1')),
+			info <- c.features -> collect(a | thisModule.resolveTemp(a, 'g2'))
+		)
+}
+
+rule attribute2text {
+	from a: CD!Attribute (	a.isText()	)
+	to	t: GUI!Text (
+			name <- 'txt' + a.name
+		),
+		l: GUI!Label (
+			value <- a.name
+		),
+		g1: GUI!GridInfo (
+			column <- 1,
+			widget <- t
+		),
+		g2: GUI!GridInfo (
+			column <- 2,
+			widget <- l
+		)
+}
+
+rule attribute2int {
+	from a: CD!Attribute (	a.isInt()	)
+	to	t: GUI!Text (
+			name <- 'int' + a.name
+		),
+		l: GUI!Label (
+			value <- a.name
+		),
+		g1: GUI!GridInfo (
+			column <- 1,
+			widget <- t
+		),
+		g2: GUI!GridInfo (
+			column <- 2,
+			widget <- l
+		)
+}
+
+rule attribute2date {
+	from a: CD!Attribute (a.isDate()	)
+	to	t: GUI!DatePicker (
+			name <- 'date' + a.name
+		),
+		l: GUI!Label (
+			value <- a.name
+		),
+		g1: GUI!GridInfo (
+			column <- 1,
+			widget <- t
+		),
+		g2: GUI!GridInfo (
+			column <- 2,
+			widget <- l
+		)
+}

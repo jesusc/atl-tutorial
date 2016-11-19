@@ -1,0 +1,42 @@
+-- @path CD=/guigen.trafo.uml2gui/metamodels/cd.ecore
+-- @path GUI=/guigen.trafo.uml2gui/metamodels/gui.ecore
+
+module "cd2gui_02";
+create OUT: GUI from IN: CD;
+
+helper context CD!Attribute def : isText() : Boolean = 
+  self.type.name = 'String';
+
+helper context CD!Attribute def: isInt()  : Boolean = 
+  self.type.name = 'Integer';
+
+rule model2gui {
+  from m : CD!Model
+    to w : GUI!Window (
+	  title <- m.name,
+      layout <- hflow
+    ), g : GUI!GUI (
+	  windows <- w
+    ), hflow : GUI!FlowLayout (
+      direction <- #vertical	
+    )
+}
+
+
+rule class2frame {
+  from c : CD!Class ( not c.isAbstract )
+  to   f : GUI!Frame (
+     title <- c.name,
+     widgets <- c.features 
+  ) 
+}
+
+rule attribute2text {
+  from p : CD!Attribute ( p.isText() )
+  to t : GUI!Text
+}
+
+rule attribute2int {
+   from a : CD!Attribute ( a.isInt() )
+     to w : GUI!Text
+}

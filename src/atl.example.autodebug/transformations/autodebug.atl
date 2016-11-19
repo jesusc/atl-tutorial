@@ -1,0 +1,33 @@
+-- @atlcompiler atl2010
+-- @path ATL=/atl.example.autodebug/metamodels/ATL.ecore
+
+module autodebug;
+create OUT: ATL refining IN : ATL;
+
+rule in_pattern {
+	from src : ATL!InPattern ( src.filter.oclIsUndefined() )
+	to   tgt : ATL!InPattern (
+		filter <- op		
+	), op : ATL!OperationCallExp (
+     	operationName <- 'debug',
+		arguments <- s,
+		source <- b   	
+     ), s : ATL!StringExp ( 
+     	stringSymbol <- 'Matching ' + src.rule.name
+     ), b : ATL!BooleanExp ( 
+     	booleanSymbol <- true	
+     ) 
+}
+
+rule in_pattern_with_filter {
+	from src : ATL!InPattern ( not src.filter.oclIsUndefined() )
+	to   tgt : ATL!InPattern (
+		filter <- op		
+	), op : ATL!OperationCallExp (
+     	operationName <- 'debug',
+		arguments <- s,
+		source <- src.filter
+     ), s : ATL!StringExp ( 
+     	stringSymbol <- 'Matching ' + src.rule.name
+     ) 
+}

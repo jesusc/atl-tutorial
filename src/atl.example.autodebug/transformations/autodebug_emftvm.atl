@@ -1,0 +1,37 @@
+-- @atlcompiler emftvm
+-- @path ATL=/atl.example.autodebug/metamodels/ATL.ecore
+
+module autodebug_emftvm;
+create OUT: ATL refining IN : ATL;
+
+rule in_pattern {
+	from src : ATL!InPattern ( true.debug('exec'))
+	to   tgt : ATL!InPattern (
+		filter <- if src.filter.oclIsUndefined() then
+				thisModule.createTrue('Matching ' + src.rule.name)
+			else
+				thisModule.debugExpression(src.filter, 'Matching ' + src.rule.name)		
+			endif		
+	)
+}
+
+rule createTrue(message : String) {
+     to b : ATL!BooleanExp ( 
+     	booleanSymbol <- true	
+     ) 
+	 do {
+     	thisModule.debugExpression(b, message);	
+     }	 
+}
+
+rule debugExpression(exp : ATL!OclExpression, message : String) {
+     to op : ATL!OperationCallExp (
+     	operationName <- 'debug',
+		arguments <- Sequence { s },
+		source <- exp     	
+     ), s : ATL!StringExp ( 
+     	stringSymbol <- message
+     ) do {
+     	op;	
+     }	 
+}

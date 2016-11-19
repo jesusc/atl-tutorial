@@ -1,0 +1,37 @@
+<project name="autodebug" default="autodebug_run_emftvm">
+
+	<target name="loadModels">
+	  <atl.loadModel modelHandler="EMF" name="ATL" metamodel="MOF"  path="metamodels/ATL.ecore" />
+	  <atl.loadModel name="ast" metamodel="ATL" path="models/cd2gui_simple.atl">
+	     <injector name="ATL"/>
+	  </atl.loadModel>	    	
+	</target>
+		
+	<target name="autodebug_run" depends="loadModels">
+		<atl.launch path="transformations/autodebug.atl" refining="true">
+		 <inoutmodel name="IN"   model="ast"/>
+		</atl.launch>
+		<atl.saveModel model="ast" path="output/cd2gui_simple.autodebug.atl"> 
+		   <extractor name="ATL"/>
+		</atl.saveModel>
+	</target>
+	
+	<!-- EMFTVM version -->
+    
+	<target name="loadModels_emftvm" >
+	    <emftvm.loadModel name="ast_emftvm" uri="/atl.example.autodebug/models/cd2gui_simple.atl" /> 	
+	   	<emftvm.loadMetamodel name="ATL" uri="http://www.eclipse.org/gmt/2005/ATL" />
+	</target>
+	
+	
+	<target name="autodebug_run_emftvm" depends="loadModels_emftvm">		
+		<emftvm.run modulepath="platform:/resource/atl.example.autodebug/transformations/" module="autodebug_emftvm" >
+			<metamodel name="ATL"/>
+			<inoutmodel name="ast_emftvm" as="IN"/>
+		</emftvm.run>
+				
+		<emftvm.saveModel name="ast_emftvm" uri="/atl.example.autodebug/output/cd2gui_simple.autodebug_emftvm.atl" derived="true"/>
+	</target>
+
+	
+</project>

@@ -1,0 +1,41 @@
+<project name="guigen" default="guigen">
+
+	<target name="guigen" depends="gui2wireframe" />
+	
+	<!-- Launches the transformations -->
+	<target name="uml2cd" depends="loadModels">
+		<atl.launch path="transformations_full/uml2cd.asm">
+		  <inmodel name="IN"   model="pet_store" />			
+		  <inmodel name="PT"   model="uml_ptypes" />			
+		  <outmodel name="OUT" model="cd_model"  metamodel="CD"/>			
+		</atl.launch>
+		<atl.saveModel model="cd_model" path="output/cd_model.xmi" />
+	</target>
+
+	<target name="cd2gui" depends="uml2cd">
+		<atl.launch path="transformations_full/cd2gui.asm">
+		 <inmodel name="IN"   model="cd_model" />			
+		 <outmodel name="OUT" model="gui_model"  metamodel="GUI"/>
+		</atl.launch>
+		<atl.saveModel model="gui_model" path="output/gui_model.xmi" />
+	</target>
+	
+	<target name="gui2wireframe" depends="cd2gui">
+		<atl.launch path="transformations_full/gui2wireframe.asm">
+		 <inmodel name="IN"   model="gui_model" />			
+		 <outmodel name="OUT" model="wireframe_model"  metamodel="SCR"/>
+		</atl.launch>
+		<atl.saveModel model="wireframe_model" path="output/wireframe_model.screen" />
+	</target>
+	
+	<!-- Loads the metamodels and the source file -->
+	<target name="loadModels">
+		<atl.loadModel modelHandler="EMF" name="UML" metamodel="MOF" nsUri="http://www.eclipse.org/uml2/5.0.0/UML" />
+		<atl.loadModel modelHandler="EMF" name="CD" metamodel="MOF" path="metamodels/cd.ecore" />
+		<atl.loadModel modelHandler="EMF" name="GUI" metamodel="MOF" path="metamodels/gui.ecore" />
+		<atl.loadModel modelHandler="EMF" name="SCR" metamodel="MOF" path="metamodels/wireframe.ecore" />
+		
+		<atl.loadModel modelHandler="EMF" name="pet_store" metamodel="UML" path="models/uml/PetStore.uml" />
+		<atl.loadModel modelHandler="EMF" name="uml_ptypes" metamodel="UML" uri="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml" />	
+	</target>
+</project>

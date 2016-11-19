@@ -1,0 +1,30 @@
+-- @nsURI UML=http://www.eclipse.org/uml2/5.0.0/UML
+-- @path CD=/guigen.trafo.uml2gui/metamodels/cd.ecore
+
+module "uml2cd showing cross refs";
+create OUT: CD from IN: UML, CDTYPES: CD;
+
+helper def : findDataType(name : String) : CD!DataType = 
+	CD!DataType.allInstancesFrom('CDTYPES')->any(d | d.name = name);
+
+
+rule Class2Class {
+   from m : UML!Class
+     to w : CD!Class (
+		isAbstract <- m.isAbstract, 
+		name <- m.name,
+		features <- m.ownedAttribute, 
+		model <- OclUndefined
+	)
+
+}
+
+rule Property2Feature {
+   from p : UML!Property ( p.type.oclIsKindOf(UML!DataType) )
+     to f : CD!Attribute (
+     	isId <- false,
+		name <- p.name, 
+		type <- thisModule.findDataType(p.type.name)
+	)
+}
+

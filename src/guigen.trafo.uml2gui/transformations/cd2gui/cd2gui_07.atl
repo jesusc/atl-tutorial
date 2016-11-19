@@ -1,0 +1,112 @@
+-- @path CD=/guigen.trafo.uml2gui/metamodels/cd.ecore
+-- @path GUI=/guigen.trafo.uml2gui/metamodels/gui.ecore
+
+--
+-- This increment (over cd2gui_04) considers all features.
+--
+module "cd2gui_07";
+create OUT: GUI from IN: CD;
+
+helper context CD!Attribute def: isText(): Boolean =
+	self.type.name = 'String';
+
+helper context CD!Attribute def: isInt(): Boolean =
+	self.type.name = 'Integer';
+
+helper context CD!Attribute def: isDate(): Boolean =
+	self.type.name = 'Date';
+
+
+helper context CD!Class def: allFeatures : Sequence(CD!Feature) =
+	self.superclasses->collect(c | c.allFeatures)->flatten()->union(self.features);
+
+helper context CD!Class def: allAttributes : Sequence(CD!Attribute) =
+	self.allFeatures->select(a | a.oclIsKindOf(CD!Attribute));
+
+
+rule model2gui {
+  from  m: CD!Model
+	to	w: GUI!Window (
+			title <- m.name,
+			layout <- hflow,
+			widgets <- m.classifiers->select(c | c.oclIsKindOf(CD!Class))
+		),
+		g: GUI!GUI (
+			windows <- w
+		),
+		hflow: GUI!FlowLayout (
+			direction <- #vertical
+		)
+}
+
+rule class2frame {
+	from c: CD!Class ( not c.isAbstract )
+	to	frm: GUI!Frame (
+			name <- 'frm' + c.name,
+			title <- c.name,
+			widgets <- c.allAttributes->collect(f | 
+				if f.isText()      then thisModule.attribute2text(f)
+        		else if f.isInt()  then thisModule.attribute2int(f)
+				else if f.isDate() then thisModule.attribute2date(f)
+        		else               OclUndefined.fail_() endif endif endif
+			),
+			
+			widgets <- c.allAttributes->collect(a | thisModule.attribute2label(a)),
+			layout <- grid
+		),
+		grid: GUI!GridLayout (
+			numColumns <- 2,
+			info <- c.allAttributes->collect(a | 
+				Sequence { thisModule.widget2gridInfo(a, 1),  thisModule.label2gridInfo(a, 2)}	
+			)
+		)
+}
+
+rule widget2gridInfo(f : CD!Attribute, i : Integer) {
+     to tgt : GUI!GridInfo (
+		column <- i,
+		widget <- if f.isText()    then thisModule.attribute2text(f)
+        		else if f.isInt()  then thisModule.attribute2int(f)
+				else if f.isDate() then thisModule.attribute2date(f)
+        		else               OclUndefined.fail_() endif endif endif
+	) do {
+		tgt; -- This is the return value! 
+	}
+}
+
+rule label2gridInfo(f : CD!Attribute, i : Integer) {
+     to tgt : GUI!GridInfo (
+		column <- i,
+		widget <- thisModule.attribute2label(f)
+	) do {
+		tgt; -- This is the return value! 
+	}
+}
+
+lazy rule attribute2text {
+	from a: CD!Attribute
+	to	t: GUI!Text (
+			name <- 'txt' + a.name
+	)
+}
+
+lazy rule attribute2int {
+	from a: CD!Attribute
+	to	t: GUI!Text (
+			name <- 'int' + a.name
+	)
+}
+
+lazy rule attribute2date {
+	from a: CD!Attribute
+	to	t: GUI!DatePicker (
+			name <- 'date' + a.name
+	)
+}
+lazy rule attribute2label {
+	from a: CD!Attribute
+	to	l: GUI!Label (
+		value <- a.name
+	)
+}
+

@@ -1,0 +1,41 @@
+-- @nsURI UML=http://www.eclipse.org/uml2/5.0.0/UML
+-- @path CD=/guigen.trafo.uml2gui/metamodels/cd.ecore
+
+-- @profile UML=/guigen.trafo.uml2gui/profiles/ExtendedCD.profile.uml
+
+module "uml2cd";
+create OUT: CD from IN: UML;
+
+rule Model2Model {
+   from m : UML!Model
+     to w : CD!Model (
+		name <- m.name,
+		classifiers <- m.ownedType->select(c | c.oclIsKindOf(UML!Classifier))		
+	)
+}
+
+rule Class2Class {
+   from m : UML!Class
+     to c : CD!Class (
+		isAbstract <- m.isAbstract, 
+		name <- m.name,
+		features <- m.ownedAttribute
+	)
+
+}
+
+rule Property2Feature {
+   from p : UML!Property ( p.type.oclIsKindOf(UML!DataType) )
+     to f : CD!Attribute (
+		name <- p.name, 
+		type <- p.type,
+		isId <- p.getAppliedStereotype('ExtendedCD::isID').debug('hasStereotype') <> OclUndefined
+	)
+}
+
+rule DataType2DataType {
+   from d1 : UML!DataType
+     to d2 : CD!DataType (
+		name <- d1.name 
+	)
+}

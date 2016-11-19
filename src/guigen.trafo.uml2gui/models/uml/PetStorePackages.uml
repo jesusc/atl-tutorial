@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ExtendedCD="http:///schemas/ExtendedCD/_D_pAQKq1Eea8pOEBkZBT_w/0" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/ExtendedCD/_D_pAQKq1Eea8pOEBkZBT_w/0 ../profiles/ExtendedCD.profile.uml">
+  <uml:Model xmi:id="_pMa-UJxvEeaIVcO9mwZV5A" name="PetStore">
+    <packagedElement xmi:type="uml:Class" xmi:id="_r1eEMJxvEeaIVcO9mwZV5A" name="Person">
+      <ownedAttribute xmi:id="_H-fdAJxzEeaIVcO9mwZV5A" name="name">
+        <type xmi:type="uml:PrimitiveType" href="platform:/plugin/org.eclipse.uml2.uml.resources/libraries/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="_nR7OQJx0EeaIVcO9mwZV5A" name="pets" type="_VPKzcJx0EeaIVcO9mwZV5A" aggregation="composite" association="_eR5_QJx0EeaIVcO9mwZV5A">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_pZ940Jx0EeaIVcO9mwZV5A" value="*"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_eR5_QJx0EeaIVcO9mwZV5A" name="person_has_pet" memberEnd="_nR7OQJx0EeaIVcO9mwZV5A _yigKoJx0EeaIVcO9mwZV5A"/>
+    <packagedElement xmi:type="uml:Package" xmi:id="_LyzvkKw_EeawoqCTJ_AuTw" name="Animals">
+      <packagedElement xmi:type="uml:Class" xmi:id="_VPKzcJx0EeaIVcO9mwZV5A" name="Pet">
+        <ownedAttribute xmi:id="_VPKzcZx0EeaIVcO9mwZV5A" name="name">
+          <type xmi:type="uml:PrimitiveType" href="platform:/plugin/org.eclipse.uml2.uml.resources/libraries/UMLPrimitiveTypes.library.uml#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="_yigKoJx0EeaIVcO9mwZV5A" name="owner" type="_r1eEMJxvEeaIVcO9mwZV5A" association="_eR5_QJx0EeaIVcO9mwZV5A"/>
+      </packagedElement>
+    </packagedElement>
+  </uml:Model>
+</xmi:XMI>

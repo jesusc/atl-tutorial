@@ -1,0 +1,38 @@
+@namespace(uri="http://guigen/cd", prefix="cd_guigen")
+package cd;
+
+class Model extends NamedElement {
+  val Classifier[*]#model classifiers;
+}
+
+abstract class NamedElement {
+  attr String[1] name;
+}
+
+abstract class Classifier extends NamedElement {
+   ref Model[1]#classifiers model;
+}
+
+class Class extends Classifier {
+  attr boolean[1] isAbstract;
+  val Feature[*] features;
+  ref Class[*] superclasses;
+}
+
+abstract class Feature extends NamedElement {
+  ref Classifier[1] type;
+  attr int[1] lowerBound;
+  attr int[1] upperBound;
+}
+
+class Attribute extends Feature {
+  attr Boolean[1] isId;
+}
+
+class Reference extends Feature {
+  attr boolean[1] containment;
+}
+
+class DataType extends Classifier {
+}
+

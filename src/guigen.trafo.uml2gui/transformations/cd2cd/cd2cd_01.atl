@@ -1,0 +1,40 @@
+-- @atlcompiler emftvm
+-- @path CD=/guigen.trafo.uml2gui/metamodels/cd.ecore
+
+module "cd2cd_01";
+create OUT: CD refining IN: CD;
+
+helper context CD!Class def: allFeatures : Sequence(CD!Feature) =
+	self.superclasses->collect(c | c.allFeatures)->flatten()->union(self.features);
+
+rule class2class {
+	from c1 : CD!Class
+	to  c2 : CD!Class (
+		features <- c1.allFeatures->collect(f | 
+			if f.oclIsKindOf(CD!Attribute) then thisModule.createAttribute(f)
+			else if f.oclIsKindOf(CD!Reference) then thisModule.createReference(f) 
+			else OclUndefined.fail_('pattern match error') endif endif)		
+	)
+}
+
+lazy rule createAttribute {
+   from f : CD!Attribute
+     to fTgt : CD!Attribute (
+		name <- f.name, 
+		type <- f.type,
+		lowerBound <- f.lowerBound, 
+		upperBound <- f.upperBound, 
+		isId <- f.isId
+	)
+}
+
+lazy rule createReference {
+   from f : CD!Reference
+     to fTgt : CD!Reference (
+		name <- f.name, 
+		type <- f.type,
+		lowerBound <- f.lowerBound, 
+		upperBound <- f.upperBound, 
+		containment <- f.containment
+	)
+}

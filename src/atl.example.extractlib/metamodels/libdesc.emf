@@ -1,0 +1,17 @@
+@namespace(uri="http://atl/libdesc", prefix="libdesc")
+package libdesc;
+
+class LibDescription {
+	val LibType[*] types;	
+}
+
+class LibType {
+	attr String[1] name;
+	val LibOperation[*]#type operations;
+}
+
+class LibOperation {
+	attr String[1] name;
+	ref LibType[1]#operations type;
+}
+

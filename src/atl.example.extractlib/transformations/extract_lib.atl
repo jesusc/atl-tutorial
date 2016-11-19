@@ -1,0 +1,92 @@
+-- @nsURI JAVA=http://www.eclipse.org/MoDisco/Java/0.2.incubation/java
+-- @path LIB=/atl.example.extractlib/metamodels/libdesc.ecore
+
+module extractlib;
+create OUT : LIB from IN : JAVA;
+
+helper context OclAny def: oclAsType(t : OclType) : OclAny = self;
+
+--		vmTypeOperations.put(Float.class, operationsByName);
+--		registerOperation(operationsByName, new Operation(2, "/") { //$NON-NLS-1$
+--					@Override
+--					public Object exec(AbstractStackFrame frame) {
+--						Object[] localVars = frame.localVars;
+--						return new Float(((Number)localVars[0]).floatValue()
+--								/ ((Number)localVars[1]).floatValue());
+--					}
+--				});
+	
+
+helper context JAVA!MethodInvocation def: findType() : JAVA!ClassDeclaration = 
+	let b : JAVA!Block = self.refImmediateComposite().refImmediateComposite().oclAsType(JAVA!Block) in
+	-- indexOf seems to return 0 if not found!
+	let idx : Integer = b.statements->indexOf(self.refImmediateComposite()) in
+	let prevs : Sequence(JAVA!Statement) = b.statements->subSequence(1, idx) in
+	let type : JAVA!ClassDeclaration = 
+		prevs->select(s | s.oclIsKindOf(JAVA!ExpressionStatement))
+			 ->collect(s | 
+			 	if s.expression.oclIsKindOf(JAVA!MethodInvocation) then 
+					if s.expression.method.name = 'put' then 
+						if s.expression.arguments->notEmpty() then
+							if s.expression.arguments->first().oclIsKindOf(JAVA!TypeLiteral) then
+									s.expression.arguments->first().type.type.debug('type')
+							else
+								OclUndefined
+							endif
+						else
+							OclUndefined
+						endif
+					else
+						OclUndefined
+					endif
+				else 
+					OclUndefined
+				endif)
+			->reject(o | o.oclIsUndefined())			 
+			->select(o | o.oclIsKindOf(JAVA!ClassDeclaration)) -- Need to cast...
+			->last() -- return null!
+	in type
+;
+
+---- registerOperation(operationsByName, new Operation(2, "min") ...)
+-- @ignore found-in-subtype, undefined-value
+helper context JAVA!MethodInvocation def: findOperationName() : String =
+	-- at(2) is ClassInstanceCreation
+	-- at(2) is StringLiteral
+	self.arguments->at(2).arguments->at(2).escapedValue;	
+	
+rule registerOperation {
+	from op : JAVA!MethodInvocation (
+		op.method.name = 'registerOperation'
+		-- To make sure this is this class... TODO: Check the class is actually 
+		-- Example: write a recursive helper that finds a given ancestor element (e.g., a ClassDeclaration named...)
+		and op.refImmediateComposite().refImmediateComposite().refImmediateComposite().oclIsKindOf(JAVA!Initializer)
+		and if op.arguments->size() = 2 then
+				op.arguments->at(2).oclIsKindOf(JAVA!ClassInstanceCreation)
+			else
+				false
+			endif
+		
+	)
+	to lib : LIB!LibOperation (
+		name <- op.findOperationName(),
+		type <- op.findType()
+	)
+}
+
+rule type {
+	from cd : JAVA!ClassDeclaration
+		( 
+			-- It is the first argument in puts
+			JAVA!TypeLiteral.allInstances()->exists(t | t.type.type = cd and 
+				if t.refImmediateComposite().oclIsKindOf(JAVA!MethodInvocation) then
+					t.refImmediateComposite().method.name = 'put'
+				else
+					false
+				endif
+			)	
+		)
+	to   l : LIB!LibType (
+		name <- cd.name	
+	)
+}

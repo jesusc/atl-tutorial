@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: GUI Generator Itegration
+Bundle-SymbolicName: guigen.integration;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: guigen.integration.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources;bundle-version="3.9.0",
+ org.eclipse.emf;bundle-version="2.6.0",
+ org.eclipse.emf.ecore.xmi;bundle-version="2.10.2",
+ org.eclipse.uml2;bundle-version="5.0.0",
+ org.eclipse.uml2.uml;bundle-version="5.0.2",
+ org.eclipse.m2m.atl.core;bundle-version="3.5.0",
+ org.eclipse.m2m.atl.core.emf;bundle-version="3.5.0",
+ org.eclipse.m2m.atl.engine.emfvm.launch,
+ org.eclipse.m2m.atl.emftvm
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy

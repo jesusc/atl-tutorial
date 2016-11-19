@@ -1,0 +1,24 @@
+-- @nsURI UML=http://www.eclipse.org/uml2/5.0.0/UML
+-- @path CD=/guigen.trafo.uml2gui/metamodels/cd.ecore
+
+module "uml2cd";
+create OUT: CD from IN: UML;
+
+rule name {
+	from
+		m1 : UML!Model
+	to 
+		m2 : CD!Model (
+			classifiers <- m1.ownedType, 
+			name <- m1.name
+		)
+}
+
+rule class2class {
+	from
+		src : UML!Class
+	to 
+		tgt : CD!Class (
+			
+		)
+}

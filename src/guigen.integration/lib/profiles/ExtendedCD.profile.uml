@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Profile xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_SZYicKq0Eea8pOEBkZBT_w" name="ExtendedCD" metaclassReference="_9_3PIKq0Eea8pOEBkZBT_w _IXZG0Kq5EeaaV-pICWoNuw">
+  <eAnnotations xmi:id="_LlR_IKq5EeaaV-pICWoNuw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+    <contents xmi:type="ecore:EPackage" xmi:id="_LlSmMKq5EeaaV-pICWoNuw" name="ExtendedCD" nsURI="http:///schemas/ExtendedCD/_LlOUwKq5EeaaV-pICWoNuw/0" nsPrefix="ExtendedCD">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_LlSmMaq5EeaaV-pICWoNuw" name="isID">
+        <eAnnotations xmi:id="_LlSmMqq5EeaaV-pICWoNuw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_jg-8kKq0Eea8pOEBkZBT_w"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_LlSmM6q5EeaaV-pICWoNuw" name="base_Property" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Property"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_LlSmNaq5EeaaV-pICWoNuw" name="Layout">
+        <eAnnotations xmi:id="_LlSmNqq5EeaaV-pICWoNuw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_hl1MkKq2Eea8pOEBkZBT_w"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_LlSmN6q5EeaaV-pICWoNuw" name="layoutStyle" ordered="false" lowerBound="1" eType="_LlSmO6q5EeaaV-pICWoNuw"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_LlSmOaq5EeaaV-pICWoNuw" name="base_Class" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Class"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_LlSmO6q5EeaaV-pICWoNuw" name="LayoutStyle">
+        <eAnnotations xmi:id="_LlSmPKq5EeaaV-pICWoNuw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_ANmAEKq3Eea8pOEBkZBT_w"/>
+        <eLiterals xmi:id="_LlSmPaq5EeaaV-pICWoNuw" name="FormLayout"/>
+        <eLiterals xmi:id="_LlSmPqq5EeaaV-pICWoNuw" name="Compact" value="1"/>
+      </eClassifiers>
+    </contents>
+  </eAnnotations>
+  <elementImport xmi:id="_eu0OEKq0Eea8pOEBkZBT_w">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+  </elementImport>
+  <elementImport xmi:id="_eu34cKq0Eea8pOEBkZBT_w">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+  </elementImport>
+  <elementImport xmi:id="_9_3PIKq0Eea8pOEBkZBT_w">
+    <importedElement xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Property"/>
+  </elementImport>
+  <elementImport xmi:id="_IXZG0Kq5EeaaV-pICWoNuw">
+    <importedElement xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
+  </elementImport>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_jg-8kKq0Eea8pOEBkZBT_w" name="isID">
+    <ownedAttribute xmi:id="_-_WWMKq0Eea8pOEBkZBT_w" name="base_Property" association="_-_VvIKq0Eea8pOEBkZBT_w">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Property"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_-_VvIKq0Eea8pOEBkZBT_w" name="Property_isID" memberEnd="_-_VvIaq0Eea8pOEBkZBT_w _-_WWMKq0Eea8pOEBkZBT_w">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_-_VvIaq0Eea8pOEBkZBT_w" name="extension_isID" type="_jg-8kKq0Eea8pOEBkZBT_w" aggregation="composite" association="_-_VvIKq0Eea8pOEBkZBT_w"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_hl1MkKq2Eea8pOEBkZBT_w" name="Layout">
+    <ownedAttribute xmi:id="_kDTUkKq2Eea8pOEBkZBT_w" name="layoutStyle" type="_ANmAEKq3Eea8pOEBkZBT_w"/>
+    <ownedAttribute xmi:id="_JyRJYKq5EeaaV-pICWoNuw" name="base_Class" association="_JyP7QKq5EeaaV-pICWoNuw">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Enumeration" xmi:id="_ANmAEKq3Eea8pOEBkZBT_w" name="LayoutStyle">
+    <ownedLiteral xmi:id="_BdjMEKq3Eea8pOEBkZBT_w" name="FormLayout"/>
+    <ownedLiteral xmi:id="_B5HtwKq3Eea8pOEBkZBT_w" name="Compact"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_JyP7QKq5EeaaV-pICWoNuw" name="Class_Layout" memberEnd="_JyQiUKq5EeaaV-pICWoNuw _JyRJYKq5EeaaV-pICWoNuw">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_JyQiUKq5EeaaV-pICWoNuw" name="extension_Layout" type="_hl1MkKq2Eea8pOEBkZBT_w" aggregation="composite" association="_JyP7QKq5EeaaV-pICWoNuw"/>
+  </packagedElement>
+</uml:Profile>

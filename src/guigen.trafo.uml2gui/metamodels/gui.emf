@@ -1,0 +1,76 @@
+@namespace(uri="http://guigen/gui", prefix="guigen")
+package gui;
+
+abstract class Widget {
+  attr String name;
+}
+
+abstract class Container {
+  val Widget[*] widgets;
+  val Layout layout;
+}
+
+class Text extends Widget {
+}
+
+class GUI {
+  val Window[*] windows;
+  val Validator[*] validators;
+}
+
+class Window extends Container {
+  attr String title;
+}
+
+class Frame extends Widget, Container {
+  attr String[1] title;
+}
+
+class Label extends Widget {
+  attr String value;
+}
+
+class ComboBox extends Widget {
+}
+
+class ListBox extends Widget {
+}
+
+class DatePicker extends Widget {
+}
+
+class Button extends Widget {
+  attr String[1] text;
+}
+
+abstract class Validator {
+  attr String[1] name;
+}
+
+class IntegerValidator extends Validator {
+}
+
+abstract class Layout {
+}
+
+class GridLayout extends Layout {
+  attr int[1] numColumns;
+  attr int[1] numRows;
+  val GridInfo[*] info;
+}
+
+class GridInfo {
+  ref Widget[1] widget;
+  attr int[1] column;
+  attr int[1] row;
+}
+
+class FlowLayout extends Layout {
+  attr FlowDirection[1] direction;
+}
+
+enum FlowDirection {
+  vertical = 0;
+  horizontal = 1;
+}
+

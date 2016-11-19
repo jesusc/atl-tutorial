@@ -1,0 +1,127 @@
+-- @path GUI=/guigen.trafo.uml2gui/metamodels/gui.ecore
+-- @path SCR=/guigen.trafo.uml2gui/metamodels/wireframe.ecore
+
+module gui2screen;
+create OUT : SCR from IN : GUI;
+
+helper def: findLast(yStart : Integer, seq : Sequence(OclAny), column : Integer) : OclAny =
+	let found : Sequence(OclAny) = seq->select(tuple | tuple.column = column) 
+	 in if found->isEmpty() then Tuple { y = yStart }
+	    else found->last() endif;
+
+helper context GUI!GridLayout def: computePositions : Sequence(OclAny) = 
+	let yStart : Integer = self.refImmediateComposite().yPosition() + 10
+     in 
+	self.info->iterate(info; acc : OclAny = Sequence { } |
+		let data : OclAny =  
+			Tuple { widget = info.widget, column = info.column,
+			        x = (info.column - 1) * 100 + 30, y = thisModule.findLast(yStart, acc, info.column).y + 30 } -- acc->size() * 25 } 			
+		
+		in acc->including(data) 
+	).debug(yStart);
+
+-- Assuming vertical to simplify
+helper context GUI!FlowLayout def: computePositions : OclAny =
+	let yStart : Integer = self.refImmediateComposite().yPosition() + 15 
+     in 
+	let widgets : OclAny = self.refImmediateComposite().widgets 
+	 in widgets->iterate(w; acc : OclAny = Sequence { } |
+		let data : OclAny =  
+			Tuple { widget = w, x = (0) * 100 + 10, y = yStart + acc->size() * 175 } 			
+		in acc->including(data) 
+	);
+
+-- @ignore undefined-value
+helper context GUI!Widget def: xPosition() : Integer = 
+	self.refImmediateComposite().layout.computePositions->any(tuple | tuple.widget = self).x;
+
+-- @ignore undefined-value
+helper context GUI!Widget def: yPosition() : Integer = 
+	self.refImmediateComposite().layout.computePositions->any(tuple | tuple.widget = self).y;
+
+helper context GUI!Window def: yPosition() : Integer = 0; 
+
+-- @ignore no-binding-compulsory-feature
+rule window2drawing {
+	from w : GUI!Window
+	to s : SCR!Screen (
+		hRuler <- r1,
+		vRuler <- r2,
+		-- This causes ATL to hang
+		-- widgets <- w
+		--widgets <- w2,
+		widgets <- GUI!Widget.allInstances()
+		
+	)--, w2 : SCR!Window (
+	--	text <- w.title
+	, r1 : SCR!ScreenRuler (
+		
+	), r2 : SCR!ScreenRuler (
+		
+	), f : SCR!ScreenFont (
+		-- size <- '12px'
+	)
+}
+
+-- @ignore no-binding-compulsory-feature
+rule frame2group {
+   from t : GUI!Frame
+     to f : SCR!Group (
+     	text <- t.title,
+		font <- font,
+		x <- t.xPosition(),
+		y <- t.yPosition(),
+		width <- 350,
+		height <- 150
+	), font : SCR!Font
+}
+
+
+-- @ignore no-binding-compulsory-feature
+rule text2text {
+   from t : GUI!Text
+     to f : SCR!TextField (
+		font <- font,
+		x <- t.xPosition(),
+		y <- t.yPosition(),
+		width <- 100,
+		height <- 5
+	), font : SCR!Font
+}
+
+-- @ignore no-binding-compulsory-feature
+rule label2label {
+   from t : GUI!Label
+     to f : SCR!Label (
+     	text <- t.value,
+		font <- font,
+		x <- t.xPosition(),
+		y <- t.yPosition(),
+		width <- 100,
+		height <- 5
+	), font : SCR!Font
+}
+
+
+rule date2date {
+   from t : GUI!DatePicker
+     to f : SCR!DateField (
+		x <- t.xPosition(),
+		y <- t.yPosition(),
+		width <- 100,
+		height <- 5
+	)
+}
+
+-- @ignore no-binding-compulsory-feature
+rule button {
+   from b1 : GUI!Button
+     to b2 : SCR!Button (
+     	text <- b1.text,
+		x <- b1.xPosition(),
+		y <- b1.yPosition(),
+		width <- 100,
+		height <- 20,
+		font <- font
+	), font : SCR!Font
+}

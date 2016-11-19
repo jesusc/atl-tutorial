@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ExtendedCD="http:///schemas/ExtendedCD/_D_pAQKq1Eea8pOEBkZBT_w/0" xmlns:ExtendedCD_1="http:///schemas/ExtendedCD/_LlOUwKq5EeaaV-pICWoNuw/0" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/ExtendedCD/_D_pAQKq1Eea8pOEBkZBT_w/0 ../profiles/ExtendedCD.profile.uml http:///schemas/ExtendedCD/_LlOUwKq5EeaaV-pICWoNuw/0 ../../profiles/ExtendedCD.profile.uml#_LlSmMKq5EeaaV-pICWoNuw">
+  <uml:Model xmi:id="_pMa-UJxvEeaIVcO9mwZV5A" name="PetStore">
+    <packagedElement xmi:type="uml:Class" xmi:id="_r1eEMJxvEeaIVcO9mwZV5A" name="Person">
+      <ownedAttribute xmi:id="_H-fdAJxzEeaIVcO9mwZV5A" name="name">
+        <type xmi:type="uml:PrimitiveType" href="platform:/plugin/org.eclipse.uml2.uml.resources/libraries/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="_nR7OQJx0EeaIVcO9mwZV5A" name="pets" type="_VPKzcJx0EeaIVcO9mwZV5A" aggregation="composite" association="_eR5_QJx0EeaIVcO9mwZV5A">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_pZ940Jx0EeaIVcO9mwZV5A" value="*"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="_BrirAKxHEeawoqCTJ_AuTw" name="address">
+        <type xmi:type="uml:PrimitiveType" href="platform:/plugin/org.eclipse.uml2.uml.resources/libraries/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_Ivq_AKydEeaBP81jE9yOkg" name="Dog">
+      <generalization xmi:id="_UnpSkKydEeaBP81jE9yOkg" general="_VPKzcJx0EeaIVcO9mwZV5A"/>
+      <ownedAttribute xmi:id="_Ivq_AaydEeaBP81jE9yOkg" name="breed">
+        <type xmi:type="uml:PrimitiveType" href="platform:/plugin/org.eclipse.uml2.uml.resources/libraries/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_VPKzcJx0EeaIVcO9mwZV5A" name="Pet" isAbstract="true">
+      <ownedAttribute xmi:id="_VPKzcZx0EeaIVcO9mwZV5A" name="name">
+        <type xmi:type="uml:PrimitiveType" href="platform:/plugin/org.eclipse.uml2.uml.resources/libraries/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="_yigKoJx0EeaIVcO9mwZV5A" name="owner" type="_r1eEMJxvEeaIVcO9mwZV5A" association="_eR5_QJx0EeaIVcO9mwZV5A"/>
+      <ownedAttribute xmi:id="_slDOQKyaEeaBP81jE9yOkg" name="birth" type="_y5AfoKyaEeaBP81jE9yOkg"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_eR5_QJx0EeaIVcO9mwZV5A" name="person_has_pet" memberEnd="_nR7OQJx0EeaIVcO9mwZV5A _yigKoJx0EeaIVcO9mwZV5A"/>
+    <packagedElement xmi:type="uml:DataType" xmi:id="_y5AfoKyaEeaBP81jE9yOkg" name="Date"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_XfmXIKydEeaBP81jE9yOkg" name="Rabbit">
+      <generalization xmi:id="_XfmXIaydEeaBP81jE9yOkg" general="_VPKzcJx0EeaIVcO9mwZV5A"/>
+      <ownedAttribute xmi:id="_XfmXIqydEeaBP81jE9yOkg" name="size">
+        <type xmi:type="uml:PrimitiveType" href="platform:/plugin/org.eclipse.uml2.uml.resources/libraries/UMLPrimitiveTypes.library.uml#Integer"/>
+      </ownedAttribute>
+    </packagedElement>
+    <profileApplication xmi:id="_fx30QKq5EeaaV-pICWoNuw">
+      <eAnnotations xmi:id="_fx7eoKq5EeaaV-pICWoNuw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="../../profiles/ExtendedCD.profile.uml#_LlSmMKq5EeaaV-pICWoNuw"/>
+      </eAnnotations>
+      <appliedProfile href="../../profiles/ExtendedCD.profile.uml#_SZYicKq0Eea8pOEBkZBT_w"/>
+    </profileApplication>
+  </uml:Model>
+  <ExtendedCD:isID xmi:id="_7uoW4Kq1Eea8pOEBkZBT_w" base_Property="_H-fdAJxzEeaIVcO9mwZV5A"/>
+  <ExtendedCD_1:isID xmi:id="_SMaggKxAEeawoqCTJ_AuTw" base_Property="_VPKzcZx0EeaIVcO9mwZV5A"/>
+</xmi:XMI>
